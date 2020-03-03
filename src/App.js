@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
+import React ,{Component} from 'react';
+//import logo from './logo.svg';
+import PokeList from './PokeList';
+import Detail from './Detail';
+import Pokemon from './Pokemon';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      pokemon: {}
+    };
+
+    this.handleOnClick = this.handleOnClick.bind(this);
+  }
+
+  handleOnClick(id) {
+    //console.log(id);
+    fetch(`http://pokeapi.co/api/v2/pokemon/${id}/`)
+      .then(res => res.json())
+      .then(data => {
+        const pokemon = new Pokemon(data);
+
+        this.setState({ pokemon });
+      })
+      .catch(err => console.log(err));
+  }
+
+  render() {
+    return (
+
+      <div className="App">
+        <PokeList handleOnClick={this.handleOnClick} />
+        <Detail pokemon = {this.state.pokemon}/>
+      </div>
+    );
+  }
 }
 
 export default App;
